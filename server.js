@@ -48,13 +48,14 @@ app.get('/api/persons', (req, res, next) => {
   } 
 })
 
+app.use(express.static('dist'))
 
-app.get('/', (req, res, next) => {
+// app.get('/', (req, res, next) => {
 
-  res.send('Hello This is the phone book API!')
+//   res.send('Hello This is the phone book API!')
 
 
-  })
+//   })
 
 
 app.post('/api/persons', (req, res, next) => {
