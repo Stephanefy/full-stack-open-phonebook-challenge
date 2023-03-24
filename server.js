@@ -48,7 +48,7 @@ app.get('/api/persons', (req, res, next) => {
   } 
 })
 
-app.use(express.static('dist'))
+app.use(express.static(path.join(__dirname, './frontend/dist')))
 
 // app.get('/', (req, res, next) => {
 
