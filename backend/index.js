@@ -31,7 +31,7 @@ const persons = [
 
 const app = express()
 
-const PORT = 3001
+const port = process.env.PORT || 3001
 
 app.use(cors())
 app.use(express.json())
@@ -127,7 +127,7 @@ app.get('/api/info', (req, res, next) => {
  app.use(errorHandling)
 
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`)
 })
 
