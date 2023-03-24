@@ -49,6 +49,14 @@ app.get('/api/persons', (req, res, next) => {
 })
 
 
+app.get('/', (req, res, next) => {
+
+  res.send('Hello This is the phone book API!')
+
+
+  })
+
+
 app.post('/api/persons', (req, res, next) => {
 
   if (req.body.name === "" && req.body.number === "") {
