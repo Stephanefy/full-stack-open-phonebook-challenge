@@ -50,12 +50,14 @@ app.get('/api/persons', (req, res, next) => {
 
 app.use(express.static(path.join(__dirname, './frontend/dist')))
 
-// app.get('/', (req, res, next) => {
-
-//   res.send('Hello This is the phone book API!')
-
-
-//   })
+app.get("*", (req, res) => {
+  res.sendFile(
+      path.join(__dirname, "./frontend/dist/index.html"),
+      function (err) {
+          res.status(500).send(err)
+      }
+  )
+})
 
 
 app.post('/api/persons', (req, res, next) => {
