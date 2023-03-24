@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, { Axios, AxiosStatic } from "axios";
 
 
 
-const request = axios.create({
+const request: Axios = axios.create({
     baseURL: 'http://localhost:3001/api/',
     timeout: 5000
 })

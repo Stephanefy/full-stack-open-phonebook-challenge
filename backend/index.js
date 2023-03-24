@@ -1,5 +1,5 @@
 import express from 'express'
-import {errorHandling} from './errorHandling.js'
+import {errorHandling} from './module/errorHandling.js'
 import morgan from 'morgan'
 import cors from 'cors'
 
@@ -123,7 +123,7 @@ app.get('/api/info', (req, res, next) => {
     } 
   })
 
-
+  // middleware for general error handling
  app.use(errorHandling)
 
 
