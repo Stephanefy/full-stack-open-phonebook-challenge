@@ -1,6 +1,7 @@
-import { UnorderedList, ListItem, Flex, Box, Spacer } from "@chakra-ui/react";
+import { UnorderedList, ListItem, Flex, Box, Spacer, Input, Stack, InputGroup, InputLeftAddon } from "@chakra-ui/react";
 import { useEffect, useState } from 'react';
 import request  from '../axios/request'
+import NewRecordForm from "./NewRecordForm";
 
 type Props = {};
 
@@ -14,12 +15,19 @@ type Person = {
 const PhoneBookList = (props: Props) => {
 
     const [phoneBookList, setPhoneBookList] = useState<Person[]>([])
+    const [error, setError] = useState(false)
 
     useEffect(() => {
         async function fetchPersons() {
-            const response = await request('/persons')
-
-            setPhoneBookList(response.data)
+            try {
+                const response = await request('/persons')
+    
+                setPhoneBookList(response.data)
+                
+            } catch (error) {
+                console.log(error)
+                setError(true)
+            }
 
         }
 
@@ -28,9 +36,11 @@ const PhoneBookList = (props: Props) => {
 
 
   return (
-    <UnorderedList w="100%" paddingTop={100} paddingBottom={100} paddingLeft={0} textAlign="left" marginLeft={0}>
+    <Box marginTop={3}>
+    <NewRecordForm/>
+    <UnorderedList w="100%" paddingTop={2} paddingBottom={100} paddingLeft={0} textAlign="left" marginLeft={0}>
        {
-        phoneBookList.map((person) => (
+        phoneBookList.length && phoneBookList?.map((person) => (
             <ListItem key={person.id} listStyleType='none' textAlign={"left"} w="100%">
                 <Flex justifyContent="between" w="100%">
                     <Box mr={20}>
@@ -46,6 +56,7 @@ const PhoneBookList = (props: Props) => {
         ))
        }
     </UnorderedList>
+    </Box>
   );
 };
 

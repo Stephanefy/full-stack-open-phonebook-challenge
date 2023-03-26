@@ -4,30 +4,21 @@ import morgan from 'morgan'
 import cors from 'cors'
 import path from 'path'
 import { fileURLToPath } from 'url';
+import { Person } from './models/person.model.js'
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 
 
-const persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+
+dotenv.config()
+
+try {
+    mongoose.connect(process.env.MONGO_URI)
+    console.log('successfully connected to MongoDB')
+} catch (error) {
+    console.err(error)
+}
+
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -43,9 +34,12 @@ app.use(express.json())
 
 app.use(morgan('tiny'))
 
-app.get('/api/persons', (req, res, next) => {
-  try {
 
+// get persons
+app.get('/api/persons', async (req, res, next) => {
+  try {
+    const persons = await Person.find({})
+    console.log('reached')
     res.json(persons)
 
   } catch (error) {
@@ -64,7 +58,7 @@ app.get("*", (req, res) => {
   )
 })
 
-
+// post a new person in the phonebook
 app.post('/api/persons', (req, res, next) => {
 
   if (req.body.name === "" && req.body.number === "") {
@@ -76,23 +70,16 @@ app.post('/api/persons', (req, res, next) => {
   
 
     try {
+        
 
-        if (persons.map(person => person.name).includes(name)) {
+        const newPerson = new Person({
+          name,
+          number
+        })
 
-            console.log(persons.includes(name))
-
-            throw new Error("Name must be unique")
-        }
-
-        const newPerson = {
-            id: Math.floor(Math.random() * 1000),
-            name,
-            number
-        }
-
-        persons.push(newPerson)
-
-        res.status(201).json(newPerson)
+        newPerson.save().then((result) => {
+          res.status(201).json(result)
+        })
   
     } catch (error) {
           next(error)
