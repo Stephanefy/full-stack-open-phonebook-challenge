@@ -49,14 +49,7 @@ app.get('/api/persons', async (req, res, next) => {
 
 app.use(express.static(path.join(__dirname, './frontend/dist')))
 
-app.get("*", (req, res) => {
-  res.sendFile(
-      path.join(__dirname, "./frontend/dist/index.html"),
-      function (err) {
-          res.status(500).send(err)
-      }
-  )
-})
+
 
 // post a new person in the phonebook
 app.post('/api/persons', (req, res, next) => {
@@ -87,26 +80,52 @@ app.post('/api/persons', (req, res, next) => {
   })
 
 
-app.get('/api/persons/:id', (req, res, next) => {
+app.get('/api/persons/:id', async (req, res, next) => {
     try {
   
-        const id = +req.params.id
-        const person = persons.find(person => person.id === id)
+        const id = req.params.id
+        console.log('jdfisdjfsj',id)
+        const person = await Person.findById(id)
 
-        res.status(200).res.json(person)
+
+
+        res.status(200).json(person)
   
     } catch (error) {
+          console.log(error)
           res.status(400).send("<h1>404 Not Found</h1>")
     } 
   })
 
-app.delete('/api/persons/:id', (req, res, next) => {
+app.delete('/api/persons/:id', async (req, res, next) => {
     try {
         console.log("reached")
-        const id = +req.params.id
-        const deletedPerson = persons.filter(person => person.id !== id)
+        const id = req.params.id
+        const deletedPerson = await Person.findByIdAndDelete(id)
+
 
         res.status(200).json(deletedPerson)
+  
+    } catch (error) {
+          
+          res.status(400).send("<h1>404 Not Found</h1>")
+    } 
+  })
+
+app.put('/api/persons/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const {name, number} = req.body
+
+        const newData = {
+          name,
+          number
+        }
+      
+        const updatedPerson = await Person.findByIdAndUpdate(id, newData, {new: true})
+
+
+        res.status(200).json(updatedPerson)
   
     } catch (error) {
           res.status(400).send("<h1>404 Not Found</h1>")
@@ -124,6 +143,15 @@ app.get('/api/info', (req, res, next) => {
     } catch (error) {
           next(error)
     } 
+  })
+
+  app.get("*", (req, res) => {
+    res.sendFile(
+        path.join(__dirname, "./frontend/dist/index.html"),
+        function (err) {
+            res.status(500).send(err)
+        }
+    )
   })
 
   // middleware for general error handling
